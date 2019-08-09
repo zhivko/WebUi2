@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="WebUi2-server-1.0-SNAPSHOT">
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/" source-path="/target/WebUi2-server-1.0-SNAPSHOT"/>
+        <dependent-module archiveName="WebUi2-shared-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/WebUi2-shared/WebUi2-shared">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="WebUi2-server"/>
+        <property name="java-output-path" value="/WebUi2-server/target/classes"/>
+    </wb-module>
+</project-modules>

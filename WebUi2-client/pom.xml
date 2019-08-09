@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>si.telekom.erender.webui2</groupId>
+		<artifactId>WebUi2</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>WebUi2-client</artifactId>
+	<packaging>gwt-app</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>si.telekom.erender.webui2.shared</groupId>
+			<artifactId>WebUi2-shared</artifactId>
+			<version>${project.version}</version>
+			<type>gwt-lib</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>si.telekom.erender.webui2.shared</groupId>
+			<artifactId>WebUi2-shared</artifactId>
+			<version>${project.version}</version>
+			<type>gwt-lib</type>
+			<classifier>sources</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>webui2</finalName>
+		<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
+		<plugins>
+			<plugin>
+				<groupId>net.ltgt.gwt.maven</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<configuration>
+					<moduleName>si.telekom.erender.webui2.WebUi2</moduleName>
+					<moduleShortName>webui2</moduleShortName>
+					<classpathScope>compile+runtime</classpathScope>
+					<skipModule>true</skipModule>
+					<skipTests>true</skipTests>
+					<localWorkers>5</localWorkers>
+					
+					<sourceLevel>1.8</sourceLevel>
+
+					<launcherDir>${project.build.directory}/${project.build.finalName}</launcherDir>
+					<classpathScope>compile+runtime</classpathScope>
+					<startupUrls>
+						<startupUrl>WebUi2.html</startupUrl>
+					</startupUrls>
+
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<configuration>
+					<mainClass>net.ltgt.gwt.devserver.DevServer</mainClass>
+					<!-- Same you have configured for `gwt:devmode`, default to the same 'runtime' value: <classpathScope>runtime</classpathScope> -->
+					<arguments>
+						<arg>-workDir</arg>
+						<arg>${project.build.directory}/gwt/codeserver</arg>
+						<!-- Proxy to your Spring Boot server -->
+						<arg>-proxyTo</arg>
+						<arg>https://localhost:9999</arg>
+						<!-- last argument is your module name -->
+						<arg>si.telekom.erender.webui2.WebUi2</arg>
+					</arguments>
+				</configuration>
+			</plugin>
+
+
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>google-snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/google-snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+</project>
+

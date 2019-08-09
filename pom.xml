@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>si.telekom.erender.webui2</groupId>
+	<artifactId>WebUi2</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt</artifactId>
+				<version>2.8.2</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.1.0</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>net.ltgt.gwt.maven</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<inherited>false</inherited>
+				<configuration>
+					<launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir>
+					<classpathScope>compile+runtime</classpathScope>
+					<skipModule>true</skipModule>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>copy-resources webapp</id>
+						<!-- here the phase you need -->
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/gwt/codeserver</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/WebUi2-server/src/main/webapp</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>copy-resources classes</id>
+						<!-- here the phase you need -->
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/gwt/codeserver/WEB-INF/classes</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/WebUi2-server/target/classes</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+
+<!-- 					<execution> -->
+<!-- 						<id>copy-resources lib</id> -->
+<!-- 						here the phase you need -->
+<!-- 						<phase>validate</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>copy-resources</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 							<outputDirectory>${basedir}/target/gwt/devmode/war/WEB-INF/lib</outputDirectory> -->
+<!-- 							<resources> -->
+<!-- 								<resource> -->
+<!-- 									<directory>${basedir}/WebUi2-server/target/WebUi2-server-1.0-SNAPSHOT/WEB-INF/lib</directory> -->
+<!-- 									<filtering>true</filtering> -->
+<!-- 								</resource> -->
+<!-- 							</resources> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+
+				</executions>
+			</plugin>
+
+		</plugins>
+		<pluginManagement>
+			<plugins>
+
+				<!-- <plugin> -->
+				<!-- <groupId>org.apache.maven.plugins</groupId> -->
+				<!-- <artifactId>maven-war-plugin</artifactId> -->
+				<!-- <version>2.6</version> -->
+				<!-- <configuration> -->
+				<!-- <failOnMissingWebXml>false</failOnMissingWebXml> -->
+				<!-- </configuration> -->
+
+				<!-- <executions> -->
+				<!-- <execution> -->
+				<!-- <id>generate-war</id> -->
+				<!-- <phase>package</phase> -->
+				<!-- <goals> -->
+				<!-- <goal>war</goal> -->
+				<!-- </goals> -->
+				<!-- <configuration> -->
+				<!-- <packagingExcludes>WEB-INF/web.xml</packagingExcludes> -->
+				<!-- <webxml>${project.build.directory}/web.xml</webxml> -->
+				<!-- <warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory> -->
+				<!-- <outputDirectory>${project.build.directory}/gwt/devmode/war</outputDirectory> -->
+
+				<!-- <webResources> -->
+				<!-- <webResource> -->
+				<!-- <directory>${project.basedir}/WebUi2-server/src/main/webapp</directory> -->
+				<!-- <targetPath>${project.build.directory}/gwt/devmode/war</targetPath> -->
+				<!-- <includes> -->
+				<!-- <include>**/*.*</include> -->
+				<!-- </includes> -->
+				<!-- <filtering>false</filtering> -->
+				<!-- </webResource> -->
+
+				<!-- <webResource> -->
+				<!-- <directory>${basedir}/src/wsdl</directory> -->
+				<!-- <targetPath>WEB-INF/wsdl</targetPath> -->
+				<!-- <includes> -->
+				<!-- <include>**/*</include> -->
+				<!-- </includes> -->
+				<!-- <filtering>false</filtering> -->
+				<!-- </webResource> -->
+
+				<!-- </webResources> -->
+				<!-- <archiveClasses>false</archiveClasses> -->
+				<!-- </configuration> -->
+				<!-- </execution> -->
+				<!-- </executions> -->
+				<!-- </plugin> -->
+
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<!-- Do not upgrade past 3.1 to avoid triggering https://issues.apache.org/jira/browse/MSOURCES-95 -->
+					<!-- Unless you use annotation processors, then upgrade to 3.5.1 at a minimum -->
+					<version>3.5.1</version>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-maven-plugin</artifactId>
+					<version>9.4.8.v20171121</version>
+				</plugin>
+				<plugin>
+					<groupId>net.ltgt.gwt.maven</groupId>
+					<artifactId>gwt-maven-plugin</artifactId>
+					<version>1.0-rc-10</version>
+					<extensions>true</extensions>
+					<configuration>
+						<sourceLevel>1.8</sourceLevel>
+						<failOnError>true</failOnError>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.0.1</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<phase>package</phase>
+							<goals>
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.tomcat.maven</groupId>
+					<artifactId>tomcat7-maven-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<modules>
+		<module>WebUi2-shared</module>
+		<module>WebUi2-client</module>
+		<module>WebUi2-server</module>
+	</modules>
+</project>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>si.telekom.erender.webui2</groupId>
+		<artifactId>WebUi2</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>WebUi2-server</artifactId>
+	<packaging>war</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>si.telekom.erender.webui2.shared</groupId>
+			<artifactId>WebUi2-shared</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+
+
+
+		<pluginManagement>
+			<plugins>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.6</version>
+					<configuration>
+						<failOnMissingWebXml>false</failOnMissingWebXml>
+					</configuration>
+
+					<executions>
+						<execution>
+							<id>generate-war</id>
+							<phase>package</phase>
+							<goals>
+								<goal>war</goal>
+							</goals>
+							<configuration>
+								<!-- <packagingExcludes>WEB-INF/web.xml</packagingExcludes> -->
+								<!-- <webxml>${project.build.directory}/web.xml</webxml> -->
+								<!-- <warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory> -->
+								<outputDirectory>${project.build.directory}/</outputDirectory>
+
+								<webResources>
+									<webResource>
+										<directory>${basedir}/../WebUi2-client/target/webui2/si.telekom.erender.webui2.WebUi2</directory>
+										<targetPath>webui2</targetPath>
+										<includes>
+											<include>**/*.*</include>
+										</includes>
+										<filtering>false</filtering>
+									</webResource>
+
+									<!-- <webResource> -->
+									<!-- <directory>${basedir}/src/wsdl</directory> -->
+									<!-- <targetPath>WEB-INF/wsdl</targetPath> -->
+									<!-- <includes> -->
+									<!-- <include>**/*</include> -->
+									<!-- </includes> -->
+									<!-- <filtering>false</filtering> -->
+									<!-- </webResource> -->
+
+								</webResources>
+								<archiveClasses>false</archiveClasses>
+								<archive>
+									<manifest>
+										<addClasspath>true</addClasspath>
+										<classpathPrefix />
+									</manifest>
+
+									<manifestEntries>
+										<url>${pom.url}</url>
+										<Implementation-Build>${buildNumber}</Implementation-Build>
+										<Implementation-Title>${project.name}</Implementation-Title>
+										<Implementation-Vendor>Telekom</Implementation-Vendor>
+										<Implementation-Version>${project.version}</Implementation-Version>
+										<Built-By>${user.name}</Built-By>
+										<Built-OS>${os.name}</Built-OS>
+										<Build-Date>${timestamp}</Build-Date>
+										<SCM>${buildNumber}</SCM>
+										<Dependencies>com.rsa</Dependencies>
+									</manifestEntries>
+
+								</archive>
+							</configuration>
+						</execution>
+					</executions>
+
+
+				</plugin>
+
+				<plugin>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-maven-plugin</artifactId>
+					<configuration>
+						<scanIntervalSeconds>1</scanIntervalSeconds>
+						<webApp>
+							<extraClasspath>${basedir}/../WebUi2-shared/target/classes/</extraClasspath>
+						</webApp>
+						<contextXml>${basedir}/src/main/jettyconf/context.xml</contextXml>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.tomcat.maven</groupId>
+					<artifactId>tomcat7-maven-plugin</artifactId>
+					<configuration>
+						<addWarDependenciesInClassloader>false</addWarDependenciesInClassloader>
+						<path>/</path>
+						<uriEncoding>UTF-8</uriEncoding>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<profiles>
+		<profile>
+			<!-- XXX: We want to exclude WebUi2-client from 'env-dev' profile, Maven forces us to make a 'env-prod' profile -->
+			<id>env-prod</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>prod</value>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>si.telekom.erender.webui2</groupId>
+					<artifactId>WebUi2-client</artifactId>
+					<version>${project.version}</version>
+					<type>war</type>
+					<scope>runtime</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+
+		<profile>
+			<id>env-dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>env</name>
+					<value>dev</value>
+				</property>
+			</activation>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.eclipse.jetty</groupId>
+							<artifactId>jetty-maven-plugin</artifactId>
+							<version>9.4.18-SNAPSHOT</version>
+							<configuration>
+								<webApp>
+									<resourceBases>
+										<resourceBase>${basedir}/src/main/webapp</resourceBase>
+										<resourceBase>${basedir}/../target/gwt/launcherDir/</resourceBase>
+									</resourceBases>
+								</webApp>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.tomcat.maven</groupId>
+							<artifactId>tomcat7-maven-plugin</artifactId>
+							<configuration>
+								<contextFile>${basedir}/src/main/tomcatconf/context.xml</contextFile>
+								<systemProperties>
+									<MAVEN_OPTS>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000</MAVEN_OPTS>
+								</systemProperties>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
+</project>

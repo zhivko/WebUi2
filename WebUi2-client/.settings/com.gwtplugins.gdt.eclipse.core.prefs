@@ -1,0 +1,7 @@
+eclipse.preferences.version=1
+gwtMavenModuleName=si.telekom.erender.webui2.WebUi2
+gwtMavenModuleShortName=webui2
+jarsExcludedFromWebInfLib=
+lastWarOutDir=/home/klemen/workspace/WebUi2/WebUi2-client/target/WebUi2-client-1.0-SNAPSHOT
+warSrcDir=war
+warSrcDirIsOutput=false
